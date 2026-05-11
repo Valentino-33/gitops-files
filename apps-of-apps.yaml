@@ -1,0 +1,119 @@
+# Root Application — apps-of-apps pattern.
+# Cada Application apunta a un directorio gitops-core-<env> que contiene
+# las Application CRs individuales de cada app en ese ambiente.
+# Aplicar manualmente tras bootstrap de ArgoCD:
+#   kubectl apply -f gitops-files/apps-of-apps.yaml -n argocd
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitops-core-dev
+  namespace: argocd
+  labels:
+    environment: dev
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Valentino-33/gitops-files
+    targetRevision: main
+    path: gitops-core-dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitops-core-staging
+  namespace: argocd
+  labels:
+    environment: staging
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Valentino-33/gitops-files
+    targetRevision: main
+    path: gitops-core-staging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitops-core-production
+  namespace: argocd
+  labels:
+    environment: production
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Valentino-33/gitops-files
+    targetRevision: main
+    path: gitops-core-production
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitops-core-testing
+  namespace: argocd
+  labels:
+    environment: testing
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Valentino-33/gitops-files
+    targetRevision: main
+    path: gitops-core-testing
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitops-core-lab
+  namespace: argocd
+  labels:
+    environment: lab
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Valentino-33/gitops-files
+    targetRevision: main
+    path: gitops-core-lab
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
